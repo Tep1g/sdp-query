@@ -1,5 +1,4 @@
 import asyncio
-import time
 from bleak import BleakScanner, BleakClient
 
 class SensorBT():
@@ -19,10 +18,9 @@ class SensorBT():
                 if device.name == self._device_name:
                     sensor_address = device.address
 
-        # Collect measurements
+        # Connect and collect measurements
         async with BleakClient(sensor_address) as client:
             if client.is_connected:
-                await client.start_notify(self._analog_uuid, self._data_callback)
-                start_time = time.time()
-                while(time.time() - start_time < duration):
-                    await asyncio.sleep(1)
+                await client.start_notify(char_specifier=self._analog_uuid, callback=self._data_callback)
+                await asyncio.sleep(duration)
+                await client.stop_notify(char_specifier=self._analog_uuid)
