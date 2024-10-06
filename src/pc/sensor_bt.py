@@ -18,7 +18,6 @@ class SensorBT():
             for device in await BleakScanner.discover():
                 if device.name == self._device_name:
                     sensor_address = device.address
-                    return sensor_address
 
         # Collect measurements
         async with BleakClient(sensor_address) as client:
