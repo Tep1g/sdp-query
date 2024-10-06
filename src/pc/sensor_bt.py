@@ -11,7 +11,7 @@ class SensorBT():
     def _data_callback(self, sender, data):
         self.data.append(int.from_bytes(bytes=data, byteorder='little', signed=False))
 
-    async def collect_measurements(self, timeout: int):
+    async def collect_measurements(self, duration: int):
         # Get sensor address
         sensor_address = None
         while sensor_address == None:
@@ -25,5 +25,5 @@ class SensorBT():
             if client.is_connected:
                 await client.start_notify(self._analog_uuid, self._data_callback)
                 start_time = time.time()
-                while(time.time() - start_time < timeout):
+                while(time.time() - start_time < duration):
                     await asyncio.sleep(1)
