@@ -7,20 +7,21 @@ class SensorBT():
         self.data = []
         self._device_name = device_name
         self._analog_uuid = analog_uuid
-        self._sensor_address = None
 
     def _data_callback(self, sender, data):
         self.data.append(int.from_bytes(bytes=data, byteorder='little', signed=False))
 
-    async def connect(self):
-        while self._sensor_address != None:
+    async def collect_measurements(self, timeout: int):
+        # Get sensor address
+        sensor_address = None
+        while sensor_address == None:
             for device in await BleakScanner.discover():
                 if device.name == self._device_name:
-                    self._sensor_address = device.address
-                    break
+                    sensor_address = device.address
+                    return sensor_address
 
-    async def collect_measurements(self, timeout: int):
-        async with BleakClient(self._sensor_address) as client:
+        # Collect measurements
+        async with BleakClient(sensor_address) as client:
             if client.is_connected:
                 await client.start_notify(self._analog_uuid, self._data_callback)
                 start_time = time.time()
