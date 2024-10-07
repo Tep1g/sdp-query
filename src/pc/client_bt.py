@@ -1,7 +1,7 @@
 import asyncio
 from bleak import BleakScanner, BleakClient
 
-class SensorBT():
+class ClientBT():
     def __init__(self, device_name: str, analog_uuid: str):
         self.data = []
         self._device_name = device_name
@@ -10,7 +10,7 @@ class SensorBT():
     def _data_callback(self, sender, data):
         self.data.append(int.from_bytes(bytes=data, byteorder='little', signed=False))
 
-    async def collect_measurements(self, duration: int):
+    async def receive_measurements(self, duration: int):
         # Get sensor address
         sensor_address = None
         while sensor_address == None:
