@@ -19,7 +19,10 @@ ADV_INTERVAL_US = const(250000)
 
 LED_GPIO = const(16)
 
-async def connect():
+async def main():
+    service = aioble.Service(SERVICE_UUID)
+    characteristic = aioble.Characteristic(service, ANALOG_UUID, read=True, notify=True)
+    aioble.register_services(service)
     led = Pin(id=LED_GPIO, mode=Pin.OUT)
     led.value(0)
     while True:
@@ -32,13 +35,6 @@ async def connect():
             led.value(1)
             await connection.disconnected(timeout_ms=None)
             led.value(0)
-
-async def main():
-    service = aioble.Service(SERVICE_UUID)
-    characteristic = aioble.Characteristic(service, ANALOG_UUID, read=True, notify=True)
-    aioble.register_services(service)
-    bt_task = asyncio.create_task(connect())
-    await asyncio.gather(bt_task)
 
 if __name__ == "__main__":
     asyncio.run(main())
