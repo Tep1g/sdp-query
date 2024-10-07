@@ -1,6 +1,7 @@
+import aioble
 import asyncio
 import bluetooth
-from bt import BT
+from machine import Pin
 
 # Device name
 DEVICE_NAME = "temp-sense"
@@ -18,15 +19,25 @@ ADV_INTERVAL_US = const(250000)
 
 LED_GPIO = const(16)
 
+async def connect():
+    led = Pin(id=LED_GPIO, mode=Pin.OUT)
+    led.value(0)
+    while True:
+        async with await aioble.advertise(
+            ADV_INTERVAL_US,
+            name=DEVICE_NAME,
+            services=[SERVICE_UUID],
+            appearance=GATT_APPEARANCE_GENERIC_SENSOR,
+        ) as connection: #type: ignore
+            led.value(1)
+            await connection.disconnected(timeout_ms=None)
+            led.value(0)
+
 async def main():
-    bt = BT(
-        device_name=DEVICE_NAME, 
-        service_uuid=SERVICE_UUID, 
-        char_uuid=ANALOG_UUID, 
-        char_appearance=GATT_APPEARANCE_GENERIC_SENSOR, 
-        adv_interval=ADV_INTERVAL_US
-    )
-    bt_task = asyncio.create_task(bt.connect(led_gpio=LED_GPIO))
+    service = aioble.Service(SERVICE_UUID)
+    characteristic = aioble.Characteristic(service, ANALOG_UUID, read=True, notify=True)
+    aioble.register_services(service)
+    bt_task = asyncio.create_task(connect())
     await asyncio.gather(bt_task)
 
 if __name__ == "__main__":
