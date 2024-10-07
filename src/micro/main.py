@@ -2,6 +2,9 @@ import asyncio
 import bluetooth
 from bt import BT
 
+# Device name
+DEVICE_NAME = "temp-sense"
+
 # Custom service
 SERVICE_UUID = bluetooth.UUID(0x9999)
 
@@ -17,6 +20,7 @@ LED_GPIO = const(16)
 
 async def main():
     bt = BT(
+        device_name=DEVICE_NAME, 
         service_uuid=SERVICE_UUID, 
         char_uuid=ANALOG_UUID, 
         char_appearance=GATT_APPEARANCE_GENERIC_SENSOR, 
