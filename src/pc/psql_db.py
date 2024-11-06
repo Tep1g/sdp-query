@@ -5,9 +5,27 @@ class Database:
     def __init__(self):
         self._conn = None
         self._cursor = None
+        self._params = {}
         
-    def conect(self, params: dict):
-        self._conn = psycopg2.connect(**params)
+    def get_params(self) -> dict:
+        password = input("Enter password: ")
+
+        params = []
+        with open("params.txt", "r") as file:
+            for line in file:
+                params.append(line.strip())
+
+        self._params = {
+            "dbname"    : params[0],
+            "host"      : params[1],
+            "user"      : params[2],
+            "password"  : password,
+            "port"      : params[3],
+            "sslmode"   : params[4]
+        }
+
+    def conect(self):
+        self._conn = psycopg2.connect(**self._params)
         self._cursor = self._conn.cursor()
 
     def create_table(self):
