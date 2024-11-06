@@ -35,7 +35,7 @@ async def main():
     bt = ClientBT(device_name=_DEVICE_NAME, analog_uuid=_ANALOG_UUID)
     await bt.receive_measurements(duration=sampling_duration)
 
-    (a, b, T_amb) = dp.decay_params(data=bt.data)
+    (a, b, T_amb) = dp.get_decay_params(data=bt.data)
 
     db = psql_db.Database
     db.conect(params=params)

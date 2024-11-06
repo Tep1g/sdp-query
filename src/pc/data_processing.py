@@ -20,7 +20,7 @@ def _convert_temp_c(adc_u16: int) -> float:
 def _decay_func(t, a, b, T_amb):
     return a * numpy.exp(-b * t) + T_amb
 
-def decay_params(data: list[int]) -> tuple[float, float, float]:
+def get_decay_params(data: list[int]) -> tuple[float, float, float]:
     time = numpy.array([float(t*SAMPLE_PERIOD_S) for t in range(0, len(data))])
     temp = numpy.array([_convert_temp_c(meas) for meas in data])
 
