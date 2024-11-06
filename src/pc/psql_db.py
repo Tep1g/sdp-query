@@ -1,4 +1,5 @@
 import psycopg2
+from datetime import datetime, timezone
 
 class Database:
     def __init__(self):
@@ -12,29 +13,32 @@ class Database:
     def create_table(self):
         self._cursor.execute(
             """
-            CREATE TABLE IF NOT EXISTS Sensor_Data (
+            CREATE TABLE IF NOT EXISTS Temperature (
                 data_id SERIAL PRIMARY KEY,
-                name VARCHAR(255),
-                sampling_rate REAL,
-                measurements INTEGER[]
+                date_stamp TIMESTAMPTZ,
+                a REAL,
+                b REAL,
+                t_amb REAL
             );
             """
         )
 
         self._conn.commit()
 
-    def add_record(self, name: str, sampling_rate: float, measurements: list[int]):
-
+    # Insert params for equation according to T = a*exp(-b*t) + T_amb
+    def add_record(self, a: float, b: float, T_amb: float):
         self._cursor.execute(
             """
-            INSERT INTO Sensor_Data (
+            INSERT INTO Temperature (
                 data_id,
-                name,
-                sampling_rate,
-                measurements
+                date_stamp,
+                a,
+                b,
+                t_amb
             )
             VALUES (
                 DEFAULT,
+                %s,
                 %s,
                 %s,
                 %s
@@ -42,9 +46,10 @@ class Database:
             """
             ,
             (
-                name,
-                sampling_rate,
-                measurements,
+                datetime.now(timezone.utc),
+                a,
+                b,
+                T_amb
             )
         )
 
