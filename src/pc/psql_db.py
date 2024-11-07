@@ -73,6 +73,14 @@ class Database:
 
         self._conn.commit()
 
+    def get_all_records(self):
+        self._cursor.execute(
+            """
+            SELECT * FROM Temperature;
+            """
+        )
+        return self._cursor.fetchall()
+
     def disconnect(self):
         self._cursor.close()
         self._conn.close()
