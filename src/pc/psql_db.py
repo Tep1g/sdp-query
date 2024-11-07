@@ -34,6 +34,7 @@ class Database:
             CREATE TABLE IF NOT EXISTS Temperature (
                 data_id SERIAL PRIMARY KEY,
                 date_stamp TIMESTAMPTZ,
+                duration INT,
                 a REAL,
                 b REAL,
                 t_amb REAL
@@ -44,12 +45,13 @@ class Database:
         self._conn.commit()
 
     # Insert params for equation according to T = a*exp(-b*t) + T_amb
-    def add_record(self, a: float, b: float, T_amb: float):
+    def add_record(self, duration: int, a: float, b: float, T_amb: float):
         self._cursor.execute(
             """
             INSERT INTO Temperature (
                 data_id,
                 date_stamp,
+                duration,
                 a,
                 b,
                 t_amb
@@ -65,6 +67,7 @@ class Database:
             ,
             (
                 datetime.now(timezone.utc),
+                duration,
                 a,
                 b,
                 T_amb

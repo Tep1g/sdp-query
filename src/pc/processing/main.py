@@ -22,7 +22,7 @@ async def main():
 
     db.connect()
     db.create_table()
-    db.add_record(a=a, b=b, T_amb=T_amb)
+    db.add_record(duration=sampling_duration, a=a, b=b, T_amb=T_amb)
     db.disconnect()
 
 if __name__ == "__main__":
