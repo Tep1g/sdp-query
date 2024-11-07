@@ -20,7 +20,7 @@ async def main():
 
     (a, b, T_amb) = dp.get_decay_params(data=bt.data)
 
-    db.conect()
+    db.connect()
     db.create_table()
     db.add_record(a=a, b=b, T_amb=T_amb)
     db.disconnect()

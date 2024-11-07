@@ -24,7 +24,7 @@ class Database:
             "sslmode"   : params[4]
         }
 
-    def conect(self):
+    def connect(self):
         self._conn = psycopg2.connect(**self._params)
         self._cursor = self._conn.cursor()
 
