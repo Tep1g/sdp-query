@@ -3,10 +3,10 @@ from scipy.optimize import curve_fit
 from math import log
 
 SAMPLE_PERIOD_S = 1.0
-_BETA = const(0)
+_BETA = 0
 _VREF = 3.3
-_U16 = const(65535)
-_PULL_UP_RES = const(1000)
+_U16 = 65535
+_PULL_UP_RES = 1000
 _VOLTAGE_FACTOR = _VREF / _U16
 _B_OVER_298 = _BETA / 298
 
