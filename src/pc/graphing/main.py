@@ -2,7 +2,7 @@ import psql_db
 from data_graphing import plot_temp_func
 
 if __name__ == "__main__":
-    db = psql_db.Database
+    db = psql_db.Database()
     db.get_params()
     db.connect()
     records = db.get_all_records()
