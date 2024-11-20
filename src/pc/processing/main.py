@@ -12,7 +12,7 @@ async def main():
     parser.add_argument('-s', '--sampling_duration', type=int, required=True)
     sampling_duration = parser.parse_args().sampling_duration
 
-    db = psql_db.Database
+    db = psql_db.Database()
     db.get_params()
 
     bt = ClientBT(device_name=_DEVICE_NAME, analog_uuid=_ANALOG_UUID)
