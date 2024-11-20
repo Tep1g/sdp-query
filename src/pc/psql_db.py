@@ -61,6 +61,7 @@ class Database:
                 %s,
                 %s,
                 %s,
+                %s,
                 %s
             );
             """
