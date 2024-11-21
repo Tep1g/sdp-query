@@ -22,9 +22,12 @@ def _decay_func(t, a, b, T_amb):
 
 def get_decay_params(data: list[int]) -> tuple[float, float, float]:
     time = numpy.array([float(t*SAMPLE_PERIOD_S) for t in range(0, len(data))])
-    temp = numpy.array([_convert_temp_c(meas) for meas in data])
+    temp = numpy.array(data)
 
     params, _ = curve_fit(_decay_func, time, temp)
-    a, b, T_amb = params
-
+    a_u16, b_u16, T_amb_u16 = params
+    a = _convert_temp_c(a_u16)
+    b = _convert_temp_c(b_u16)
+    T_amb = _convert_temp_c(T_amb_u16)
+    
     return a, b, T_amb
