@@ -220,11 +220,11 @@ class Database:
                 MIN(data) as average_tempF,
                 MAX(data) as average_tempF
             FROM (
-                SELECT UNNEST(degF_points) as data
+                SELECT data_id, date_stamp, duration, UNNEST(degF_points) as data
                 FROM Temperature
             ) subquery
-            GROUP BY data_id
-            ORDER BY data_id;
+            GROUP BY data_id, date_stamp, duration
+            ORDER BY data_id, date_stamp, duration;
             """
         )
         return self._cursor.fetchall()
