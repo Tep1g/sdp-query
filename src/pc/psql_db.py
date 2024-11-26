@@ -57,7 +57,7 @@ class Database:
 
         self._conn.commit()
 
-    def add_thermistor_record(self, beta: int, resistance_at_25C: int):
+    def add_thermistor_record(self, part_number: str, beta: int, resistance_at_25C: int):
         self._cursor.execute(
             """
             INSERT INTO Thermistor (
@@ -66,7 +66,7 @@ class Database:
                 resistance_at_25C
             )
             VALUES (
-                DEFAULT,
+                %s,
                 %s,
                 %s
             );
