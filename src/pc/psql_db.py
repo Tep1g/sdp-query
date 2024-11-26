@@ -80,6 +80,27 @@ class Database:
 
         self._conn.commit()
 
+    def get_all_thermistor_records(self):
+        self._cursor.execute(
+            """
+            SELECT * FROM THERMISTOR;
+            """
+        )
+        
+        return self._cursor.fetchall()
+
+    def get_single_thermistor_record(self, part_number: str):
+        self._cursor.execute(
+            """
+            SELECT * FROM THERMISTOR
+            WHERE therm_id = %s;
+            """
+            ,
+            (part_number,)
+        )
+
+        return self._cursor.fetchone()
+
     def add_config_record(self, is_pull_down_therm: int, series_resistance: int):
         self._cursor.execute(
             """
@@ -102,6 +123,27 @@ class Database:
         )
 
         self._conn.commit()
+
+    def get_all_config_records(self):
+        self._cursor.execute(
+            """
+            SELECT * FROM THERMISTOR;
+            """
+        )
+
+        return self._cursor.fetchall()
+
+    def get_single_config_record(self, config_id: int):
+        self._cursor.execute(
+            """
+            SELECT * FROM config_id
+            WHERE therm_id = %s;
+            """
+            ,
+            (config_id,)
+        )
+
+        return self._cursor.fetchone()
 
     def add_setup_record(self, part_number: str, config_id: int):
         self._cursor.execute(
@@ -186,6 +228,18 @@ class Database:
             """
         )
         return self._cursor.fetchall()
+    
+    def get_single_data_record(self, data_id: int) -> tuple[int, list[float]]:
+        self._cursor.execute(
+            """
+            SELECT * FROM Temperature
+            WHERE data_id = %s;
+            """
+            ,
+            (data_id,)
+        )
+
+        return self._cursor.fetchone()
 
     def disconnect(self):
         self._cursor.close()
