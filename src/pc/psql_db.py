@@ -167,10 +167,22 @@ class Database:
 
         self._conn.commit()
 
-    def get_all_records(self):
+    def get_all_data_records(self):
         self._cursor.execute(
             """
-            SELECT * FROM Temperature;
+            SELECT 
+                data_id,
+                date_stamp,
+                duration,
+                AVG(data) as average_tempF,
+                MIN(data) as average_tempF,
+                MAX(data) as average_tempF
+            FROM (
+                SELECT UNNEST(degF_points) as data
+                FROM Temperature
+            ) subquery
+            GROUP BY data_id
+            ORDER BY data_id;
             """
         )
         return self._cursor.fetchall()
