@@ -28,6 +28,104 @@ class Database:
         self._conn = psycopg2.connect(**self._params)
         self._cursor = self._conn.cursor()
 
+    def create_hw_setup_tables(self):
+        table_creation_statements = [
+            """
+            CREATE TABLE IF NOT EXISTS Thermistor (
+                part_number TEXT PRIMARY KEY,
+                beta INT,
+                resistance_at_25C INT
+            );
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS Configuration (
+                config_id SERIAL PRIMARY KEY,
+                is_pull_down_therm BOOLEAN,
+                series_resistance INT
+            );
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS Setup (
+                setup_id SERIAL PRIMARY KEY,
+                part_number TEXT FOREIGN KEY,
+                config_id SERIAL FOREIGN KEY
+            );
+            """
+        ]
+        for statement in table_creation_statements:
+            self._cursor.execute(statement)
+
+        self._conn.commit()
+
+    def add_thermistor_record(self, beta: int, resistance_at_25C: int):
+        self._cursor.execute(
+            """
+            INSERT INTO Thermistor (
+                part_number,
+                beta,
+                resistance_at_25C
+            )
+            VALUES (
+                DEFAULT,
+                %s,
+                %s
+            );
+            """
+            ,
+            (
+                beta,
+                resistance_at_25C,
+            )
+        )
+
+        self._conn.commit()
+
+    def add_config_record(self, is_pull_down_therm: int, series_resistance: int):
+        self._cursor.execute(
+            """
+            INSERT INTO Configuration (
+                config_id,
+                is_pull_down_therm,
+                series_resistance
+            )
+            VALUES (
+                DEFAULT,
+                %s,
+                %s
+            );
+            """
+            ,
+            (
+                is_pull_down_therm,
+                series_resistance,
+            )
+        )
+
+        self._conn.commit()
+
+    def add_setup_record(self, part_number: str, config_id: int):
+        self._cursor.execute(
+            """
+            INSERT INTO Setup (
+                setup_id,
+                part_number,
+                config_id
+            )
+            VALUES (
+                DEFAULT,
+                %s,
+                %s
+            );
+            """
+            ,
+            (
+                part_number,
+                config_id,
+            )
+        )
+
+        self._conn.commit()
+
     def create_data_table(self):
         self._cursor.execute(
             """
