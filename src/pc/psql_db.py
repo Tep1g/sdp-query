@@ -28,38 +28,32 @@ class Database:
         self._conn = psycopg2.connect(**self._params)
         self._cursor = self._conn.cursor()
 
-    def create_table(self):
+    def create_data_table(self):
         self._cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS Temperature (
                 data_id SERIAL PRIMARY KEY,
                 date_stamp TIMESTAMPTZ,
                 duration INT,
-                a REAL,
-                b REAL,
-                t_amb REAL
+                degF_points REAL[],
+                config_id SERIAL
             );
             """
         )
 
         self._conn.commit()
 
-    # Insert params for equation according to T = a*exp(-b*t) + T_amb
-    def add_record(self, duration: int, a: float, b: float, T_amb: float):
+    def add_data_record(self, duration: int, degF_points: list[float]):
         self._cursor.execute(
             """
             INSERT INTO Temperature (
                 data_id,
                 date_stamp,
                 duration,
-                a,
-                b,
-                t_amb
+                degF_points
             )
             VALUES (
                 DEFAULT,
-                %s,
-                %s,
                 %s,
                 %s,
                 %s
@@ -69,9 +63,7 @@ class Database:
             (
                 datetime.now(timezone.utc),
                 duration,
-                a,
-                b,
-                T_amb
+                degF_points
             )
         )
 
