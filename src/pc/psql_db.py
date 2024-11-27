@@ -33,15 +33,15 @@ class Database:
             """
             CREATE TABLE IF NOT EXISTS Thermistor (
                 part_number TEXT PRIMARY KEY,
-                beta INT,
-                resistance_at_25C INT
+                beta_kΩ INT,
+                resistance_Ω_at_25C INT
             );
             """,
             """
             CREATE TABLE IF NOT EXISTS Configuration (
                 config_id SERIAL PRIMARY KEY,
                 is_pull_down_therm BOOLEAN,
-                series_resistance INT,
+                series_resistance_Ω INT,
                 UNIQUE (is_pull_down_therm, series_resistance)
             );
             """,
@@ -64,8 +64,8 @@ class Database:
             """
             INSERT INTO Thermistor (
                 part_number,
-                beta,
-                resistance_at_25C
+                beta_kΩ,
+                resistance_Ω_at_25C
             )
             VALUES (
                 %s,
@@ -110,7 +110,7 @@ class Database:
             INSERT INTO Configuration (
                 config_id,
                 is_pull_down_therm,
-                series_resistance
+                series_resistance_Ω
             )
             VALUES (
                 DEFAULT,
