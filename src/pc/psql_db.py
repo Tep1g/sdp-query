@@ -83,7 +83,7 @@ class Database:
     def get_all_thermistor_records(self):
         self._cursor.execute(
             """
-            SELECT * FROM THERMISTOR;
+            SELECT * FROM Thermistor;
             """
         )
         
@@ -92,7 +92,7 @@ class Database:
     def get_single_thermistor_record(self, part_number: str):
         self._cursor.execute(
             """
-            SELECT * FROM THERMISTOR
+            SELECT * FROM Thermistor
             WHERE therm_id = %s;
             """
             ,
@@ -167,6 +167,15 @@ class Database:
         )
 
         self._conn.commit()
+
+    def get_all_setup_records(self):
+        self._cursor.execute(
+            """
+            SELECT * FROM Setup;
+            """
+        )
+
+        return self._cursor.fetchall()
 
     def create_data_table(self):
         self._cursor.execute(
