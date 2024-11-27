@@ -10,12 +10,12 @@ _PULL_UP_RES = 1000
 _VOLTAGE_FACTOR = _VREF / _U16
 _B_OVER_298 = _BETA / 298
 
-def _convert_temp_c(adc_u16: int) -> float:
+def convert_temp_f(adc_u16: int) -> float:
     volt = adc_u16 * _VOLTAGE_FACTOR
     res = (volt / (_VREF - volt)) * _PULL_UP_RES
     temp_c = (_BETA / (log(res / _PULL_UP_RES) + (_B_OVER_298))) - 273
 
-    return temp_c
+    return (temp_c * 9/5) + 32
 
 def _decay_func(t, a, b, amb_temp):
     return a * numpy.exp(-b * t) + amb_temp
