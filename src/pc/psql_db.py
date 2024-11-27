@@ -177,6 +177,18 @@ class Database:
 
         return self._cursor.fetchall()
 
+    def get_single_setup_record(self, setup_id: int):
+        self._cursor.execute(
+            """
+            SELECT * FROM Temperature
+            WHERE setup_id = %s;
+            """
+            ,
+            (setup_id,)
+        )
+
+        return self._cursor.fetchall()
+
     def create_data_table(self):
         self._cursor.execute(
             """
