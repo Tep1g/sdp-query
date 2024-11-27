@@ -1,8 +1,8 @@
 import argparse
 import asyncio
-import data_processing as dp
 import psql_db
 from client_bt import ClientBT
+from conversion import convert_temp_f
 
 _ANALOG_UUID = "000025a8-0000-1000-8000-00805f9b34fb"
 _DEVICE_NAME = "temp-sense"
@@ -170,7 +170,7 @@ async def main():
     data_deg_f = []
     for data_point in bt.data:
         data_deg_f.append(
-            dp.convert_temp_f(
+            convert_temp_f(
                 data_point,
                 v_ref,
                 adc_bitsize,
