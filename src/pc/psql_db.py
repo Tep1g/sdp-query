@@ -222,17 +222,19 @@ class Database:
 
         self._conn.commit()
 
-    def add_data_record(self, duration: int, degF_points: list[float]):
+    def add_data_record(self, duration: int, degF_points: list[float], setup_id: int):
         self._cursor.execute(
             """
             INSERT INTO Temperature (
                 data_id,
                 date_stamp,
                 duration,
-                degF_points
+                degF_points,
+                setup_id
             )
             VALUES (
                 DEFAULT,
+                %s,
                 %s,
                 %s,
                 %s
@@ -242,7 +244,8 @@ class Database:
             (
                 datetime.now(timezone.utc),
                 duration,
-                degF_points
+                degF_points,
+                setup_id
             )
         )
 
