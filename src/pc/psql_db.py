@@ -266,8 +266,8 @@ class Database:
                 date_stamp,
                 duration,
                 AVG(data) as average_tempF,
-                MIN(data) as average_tempF,
-                MAX(data) as average_tempF
+                MIN(data) as min_tempF,
+                MAX(data) as max_tempF
             FROM (
                 SELECT data_id, date_stamp, duration, UNNEST(degF_points) as data
                 FROM Temperature
