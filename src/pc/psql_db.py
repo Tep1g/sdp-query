@@ -218,7 +218,7 @@ class Database:
         self._cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS Temperature (
-                data_id INT PRIMARY KEY,
+                data_id SERIAL PRIMARY KEY,
                 date_stamp TIMESTAMPTZ,
                 duration INT,
                 degF_points REAL[],
