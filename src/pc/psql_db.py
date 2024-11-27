@@ -127,7 +127,7 @@ class Database:
     def get_all_config_records(self):
         self._cursor.execute(
             """
-            SELECT * FROM THERMISTOR;
+            SELECT * FROM Configuration;
             """
         )
 
