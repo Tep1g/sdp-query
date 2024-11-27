@@ -36,6 +36,7 @@ if __name__ == "__main__":
     setup = db.get_single_setup_record(data_record[4])
     config_id = setup[2]
     config = db.get_single_config_record(config_id)
+    db.disconnect()
 
     if args.plot_log:
         plot_temp_log_func(data=data_record[3], duration_s=data_record[2], sample_period_s=config[5])
