@@ -75,6 +75,7 @@ class Database:
             """
             ,
             (
+                part_number,
                 beta,
                 resistance_at_25C,
             )
