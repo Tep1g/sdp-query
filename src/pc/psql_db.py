@@ -179,15 +179,30 @@ class Database:
 
         return self._cursor.fetchall()
 
-    def get_single_setup_record(self, setup_id: int):
-        self._cursor.execute(
-            """
-            SELECT * FROM Temperature
-            WHERE setup_id = %s;
-            """
-            ,
-            (setup_id,)
-        )
+    def get_single_setup_record(self, setup_id=None, part_number=None, config_id=None):    
+        if (setup_id != None) and (part_number == config_id == None):
+            self._cursor.execute(
+                """
+                SELECT * FROM Setup
+                WHERE setup_id = %s;
+                """
+                ,
+                (setup_id,)
+            )
+            
+        elif (part_number != None) and (config_id != None):
+            self._cursor.execute(
+                """
+                SELECT * FROM Setup
+                WHERE part_number = %s AND
+                config_id = %s;
+                """
+                ,
+                (
+                    part_number,
+                    config_id
+                )
+            )
 
         return self._cursor.fetchall()
 
