@@ -41,14 +41,16 @@ class Database:
             CREATE TABLE IF NOT EXISTS Configuration (
                 config_id SERIAL PRIMARY KEY,
                 is_pull_down_therm BOOLEAN,
-                series_resistance INT
+                series_resistance INT,
+                UNIQUE (is_pull_down_therm, series_resistance)
             );
             """,
             """
             CREATE TABLE IF NOT EXISTS Setup (
                 setup_id SERIAL PRIMARY KEY,
                 part_number TEXT FOREIGN KEY,
-                config_id SERIAL FOREIGN KEY
+                config_id SERIAL FOREIGN KEY,
+                UNIQUE (part_number, config_id)
             );
             """
         ]
