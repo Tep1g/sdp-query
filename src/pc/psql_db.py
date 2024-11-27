@@ -136,15 +136,29 @@ class Database:
 
         return self._cursor.fetchall()
 
-    def get_single_config_record(self, config_id: int):
-        self._cursor.execute(
-            """
-            SELECT * FROM config_id
-            WHERE therm_id = %s;
-            """
-            ,
-            (config_id,)
-        )
+    def get_single_config_record(self, config_id=None, is_pull_down_therm=None, series_resistance=None):
+        if (config_id != None) and (is_pull_down_therm==series_resistance==None):
+            self._cursor.execute(
+                """
+                SELECT * FROM config_id
+                WHERE therm_id = %s;
+                """
+                ,
+                (config_id,)
+            )
+        elif (is_pull_down_therm != None) and (series_resistance != None):
+            self._cursor.execute(
+                """
+                SELECT * FROM config_id
+                WHERE is_pull_down_therm = %s AND
+                series_resistance = %s;
+                """
+                ,
+                (
+                    is_pull_down_therm,
+                    series_resistance
+                )
+            )
 
         return self._cursor.fetchone()
 
