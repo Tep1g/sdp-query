@@ -140,7 +140,7 @@ class Database:
         if (config_id != None) and (is_pull_down_therm==series_resistance==None):
             self._cursor.execute(
                 """
-                SELECT * FROM config_id
+                SELECT * FROM Configuration
                 WHERE therm_id = %s;
                 """
                 ,
@@ -149,7 +149,7 @@ class Database:
         elif (is_pull_down_therm != None) and (series_resistance != None):
             self._cursor.execute(
                 """
-                SELECT * FROM config_id
+                SELECT * FROM Configuration
                 WHERE is_pull_down_therm = %s AND
                 series_resistance = %s;
                 """
