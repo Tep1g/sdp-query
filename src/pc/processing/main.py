@@ -70,6 +70,7 @@ async def main():
                     Model Number: {}
                     Beta Value: {}
                     Resistance (Ω) at 25C: {}
+                    
                     """.format(record[0], record[1], record[2])
                 )
 
@@ -107,7 +108,18 @@ async def main():
                     Config ID: {}
                     Is Pull-Down: {}
                     Series Resistance (Ω): {}
-                    """.format(record[0], record[1], record[2])
+                    ADC Bitsize: {}
+                    Reference Voltage: {:.2f}
+                    Sample Period (sec): {} 
+
+                    """.format(
+                        record[0],
+                        record[1],
+                        record[2],
+                        record[3],
+                        record[4],
+                        record[5]
+                    )
                 )
 
         if (add_new_config) or (input("Choose existing configuration?: ").lower() == "no"):
