@@ -39,17 +39,20 @@ class Database:
             """,
             """
             CREATE TABLE IF NOT EXISTS Configuration (
-                config_id SERIAL PRIMARY KEY,
+                config_id INT PRIMARY KEY,
                 is_pull_down_therm BOOLEAN,
                 series_resistance_Ω INT,
-                UNIQUE (is_pull_down_therm, series_resistance)
+                adc_bitsize SMALLINT,
+                reference_voltage REAL,
+                sample_period_s INTEGER,
+                UNIQUE (is_pull_down_therm, series_resistance, adc_bitsize)
             );
             """,
             """
             CREATE TABLE IF NOT EXISTS Setup (
-                setup_id SERIAL PRIMARY KEY,
+                setup_id INT PRIMARY KEY,
                 part_number TEXT FOREIGN KEY,
-                config_id SERIAL FOREIGN KEY,
+                config_id INT FOREIGN KEY,
                 UNIQUE (part_number, config_id)
             );
             """
@@ -104,24 +107,42 @@ class Database:
 
         return self._cursor.fetchone()
 
-    def add_config_record(self, is_pull_down_therm: int, series_resistance: int):
+    def add_config_record(
+        self,
+        config_id: int,
+        is_pull_down_therm: bool,
+        series_resistance_ohms: int,
+        adc_bitsize: int,
+        reference_voltage: float,
+        sample_period_s: float
+    ):
         self._cursor.execute(
             """
             INSERT INTO Configuration (
                 config_id,
                 is_pull_down_therm,
-                series_resistance_Ω
+                series_resistance_Ω,
+                adc_bitsize,
+                reference_voltage,
+                sample_period_s
             )
             VALUES (
-                DEFAULT,
+                %s,
+                %s,
+                %s,
+                %s,
                 %s,
                 %s
             );
             """
             ,
             (
+                config_id,
                 is_pull_down_therm,
-                series_resistance,
+                series_resistance_ohms,
+                adc_bitsize,
+                reference_voltage,
+                sample_period_s
             )
         )
 
@@ -136,33 +157,19 @@ class Database:
 
         return self._cursor.fetchall()
 
-    def get_single_config_record(self, config_id=None, is_pull_down_therm=None, series_resistance=None):
-        if (config_id != None) and (is_pull_down_therm==series_resistance==None):
-            self._cursor.execute(
-                """
-                SELECT * FROM Configuration
-                WHERE therm_id = %s;
-                """
-                ,
-                (config_id,)
-            )
-        elif (is_pull_down_therm != None) and (series_resistance != None):
-            self._cursor.execute(
-                """
-                SELECT * FROM Configuration
-                WHERE is_pull_down_therm = %s AND
-                series_resistance = %s;
-                """
-                ,
-                (
-                    is_pull_down_therm,
-                    series_resistance
-                )
-            )
+    def get_single_config_record(self, config_id: int):
+        self._cursor.execute(
+            """
+            SELECT * FROM Configuration
+            WHERE config_id = %s;
+            """
+            ,
+            (config_id,)
+        )
 
         return self._cursor.fetchone()
 
-    def add_setup_record(self, part_number: str, config_id: int):
+    def add_setup_record(self, setup_id: int, part_number: str, config_id: int):
         self._cursor.execute(
             """
             INSERT INTO Setup (
@@ -171,13 +178,14 @@ class Database:
                 config_id
             )
             VALUES (
-                DEFAULT,
+                %s,
                 %s,
                 %s
             );
             """
             ,
             (
+                setup_id,
                 part_number,
                 config_id,
             )
@@ -194,42 +202,27 @@ class Database:
 
         return self._cursor.fetchall()
 
-    def get_single_setup_record(self, setup_id=None, part_number=None, config_id=None):    
-        if (setup_id != None) and (part_number == config_id == None):
-            self._cursor.execute(
-                """
-                SELECT * FROM Setup
-                WHERE setup_id = %s;
-                """
-                ,
-                (setup_id,)
-            )
-            
-        elif (part_number != None) and (config_id != None):
-            self._cursor.execute(
-                """
-                SELECT * FROM Setup
-                WHERE part_number = %s AND
-                config_id = %s;
-                """
-                ,
-                (
-                    part_number,
-                    config_id
-                )
-            )
-
-        return self._cursor.fetchall()
+    def get_single_setup_record(self, setup_id: int):    
+        self._cursor.execute(
+            """
+            SELECT * FROM Setup
+            WHERE setup_id = %s;
+            """
+            ,
+            (setup_id,)
+        )
+        
+        return self._cursor.fetchone()
 
     def create_data_table(self):
         self._cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS Temperature (
-                data_id SERIAL PRIMARY KEY,
+                data_id INT PRIMARY KEY,
                 date_stamp TIMESTAMPTZ,
                 duration INT,
                 degF_points REAL[],
-                config_id SERIAL
+                config_id INT
             );
             """
         )
