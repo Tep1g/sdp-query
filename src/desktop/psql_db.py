@@ -33,7 +33,7 @@ class Database:
             """
             CREATE TABLE IF NOT EXISTS Thermistor (
                 part_number TEXT PRIMARY KEY,
-                beta_kΩ INT NOT NULL,
+                beta_K INT NOT NULL,
                 resistance_Ω_at_25C INT NOT NULL
             );
             """,
@@ -68,7 +68,7 @@ class Database:
             """
             INSERT INTO Thermistor (
                 part_number,
-                beta_kΩ,
+                beta_K,
                 resistance_Ω_at_25C
             )
             VALUES (
@@ -232,7 +232,7 @@ class Database:
             CREATE TABLE IF NOT EXISTS Temperature (
                 data_id SERIAL PRIMARY KEY,
                 date_stamp TIMESTAMPTZ,
-                duration INT,
+                duration_s INT,
                 degF_points REAL[],
                 setup_id INT NOT NULL,
                 FOREIGN KEY(setup_id) REFERENCES Setup (setup_id)
@@ -242,13 +242,13 @@ class Database:
 
         self._conn.commit()
 
-    def add_data_record(self, duration: int, degF_points: list[float], setup_id: int):
+    def add_data_record(self, duration_s: int, degF_points: list[float], setup_id: int):
         self._cursor.execute(
             """
             INSERT INTO Temperature (
                 data_id,
                 date_stamp,
-                duration,
+                duration_s,
                 degF_points,
                 setup_id
             )
@@ -263,7 +263,7 @@ class Database:
             ,
             (
                 datetime.now(timezone.utc),
-                duration,
+                duration_s,
                 degF_points,
                 setup_id
             )
@@ -277,16 +277,16 @@ class Database:
             SELECT 
                 data_id,
                 date_stamp,
-                duration,
+                duration_s,
                 AVG(data) as average_tempF,
                 MIN(data) as min_tempF,
                 MAX(data) as max_tempF
             FROM (
-                SELECT data_id, date_stamp, duration, UNNEST(degF_points) as data
+                SELECT data_id, date_stamp, duration_s, UNNEST(degF_points) as data
                 FROM Temperature
             ) subquery
-            GROUP BY data_id, date_stamp, duration
-            ORDER BY data_id, date_stamp, duration;
+            GROUP BY data_id, date_stamp, duration_s
+            ORDER BY data_id, date_stamp, duration_s;
             """
         )
         return self._cursor.fetchall()

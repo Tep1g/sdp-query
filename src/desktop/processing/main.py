@@ -32,7 +32,7 @@ async def main():
                 ------------
                 Thermistor Specs
                 Model Number: {}
-                Beta Value (kΩ): {}
+                Beta Value (K): {}
                 Resistance (Ω) at 25C: {}
                 ------------
                 Configuration
@@ -72,7 +72,7 @@ Saved Thermistors
                 print(
 """
 Part Number: {}
-Beta Value: {}
+Beta Value (K): {}
 Resistance (Ω) at 25C: {}
 
 """.format(record[0], record[1], record[2])
@@ -90,7 +90,7 @@ Resistance (Ω) at 25C: {}
                 therm_specs_obtained = True
 
             if not therm_specs_obtained:
-                beta = int(input("Enter beta value (KΩ): "))
+                beta = int(input("Enter beta value (K): "))
                 res_at_25C = int(input("Enter resistance at 25C (Ω): "))
                 db.add_thermistor_record(part_number, beta, res_at_25C)
         else:
