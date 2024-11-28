@@ -33,26 +33,28 @@ class Database:
             """
             CREATE TABLE IF NOT EXISTS Thermistor (
                 part_number TEXT PRIMARY KEY,
-                beta_kΩ INT,
-                resistance_Ω_at_25C INT
+                beta_kΩ INT NOT NULL,
+                resistance_Ω_at_25C INT NOT NULL
             );
             """,
             """
             CREATE TABLE IF NOT EXISTS Configuration (
                 config_id INT PRIMARY KEY,
-                is_pull_down_therm BOOLEAN,
-                series_resistance_Ω INT,
-                adc_bitsize SMALLINT,
-                reference_voltage REAL,
-                sample_period_s INTEGER,
-                UNIQUE (is_pull_down_therm, series_resistance, adc_bitsize)
+                is_pull_down_therm BOOLEAN NOT NULL,
+                series_resistance_Ω INT NOT NULL,
+                adc_bitsize SMALLINT NOT NULL,
+                reference_voltage REAL NOT NULL,
+                sample_period_s INTEGER NOT NULL,
+                UNIQUE (is_pull_down_therm, series_resistance_Ω, adc_bitsize)
             );
             """,
             """
             CREATE TABLE IF NOT EXISTS Setup (
                 setup_id INT PRIMARY KEY,
-                part_number TEXT FOREIGN KEY,
-                config_id INT FOREIGN KEY,
+                part_number TEXT NOT NULL,
+                config_id INT NOT NULL,
+                FOREIGN KEY(part_number) REFERENCES Thermistor (part_number),
+                FOREIGN KEY(config_id) REFERENCES Configuration (config_id),
                 UNIQUE (part_number, config_id)
             );
             """
