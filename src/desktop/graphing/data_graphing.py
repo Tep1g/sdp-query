@@ -27,7 +27,8 @@ def plot_temp_log_func(data: list[float], duration_s: int):
     plt.grid(True)
     plt.show()
 
-def plot_temps(data: list[float], sample_period_s: int):
+def plot_temps(data: list[float], duration_s: int):
+    sample_period_s = duration_s / len(data)
     time = np.array([float(t*sample_period_s) for t in range(0, len(data))])
     temp = np.array(data)
 

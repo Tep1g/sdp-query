@@ -1,3 +1,6 @@
+import sys
+sys.path.append('..')
+
 import argparse
 import psql_db
 from data_graphing import plot_temp_log_func, plot_temps
@@ -38,4 +41,4 @@ if __name__ == "__main__":
     if args.plot_log:
         plot_temp_log_func(data=data_record[3], duration_s=data_record[2])
     else:
-        plot_temps(data=data_record[3])
+        plot_temps(data=data_record[3], duration_s=data_record[2])
