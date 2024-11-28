@@ -172,20 +172,17 @@ Reference Voltage: {:.2f}
     await bt.receive_measurements(duration=sampling_duration)
 
     # Convert analog measurements
-    data_deg_f = []
-    for data_point in bt.data:
-        data_deg_f.append(
-            convert_temp_f(
-                data_point,
-                v_ref,
-                adc_bitsize,
-                series_resistance,
-                beta,
-                is_pull_down
-            )
-        )
+    data_deg_f = convert_temp_f(
+        bt.data,
+        v_ref,
+        adc_bitsize,
+        res_at_25C,
+        series_resistance,
+        beta,
+        is_pull_down
+    )
 
-    db.add_data_record(duration=sampling_duration, degF_points=data_deg_f, setup_id=setup_id)
+    db.add_data_record(duration_s=sampling_duration, degF_points=data_deg_f, setup_id=setup_id)
     db.disconnect()
 
 if __name__ == "__main__":
