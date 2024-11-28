@@ -44,8 +44,7 @@ class Database:
                 series_resistance_Ω INT NOT NULL,
                 adc_bitsize SMALLINT NOT NULL,
                 reference_voltage REAL NOT NULL,
-                sample_period_s INTEGER NOT NULL,
-                UNIQUE (is_pull_down_therm, series_resistance_Ω, adc_bitsize)
+                UNIQUE (is_pull_down_therm, series_resistance_Ω, adc_bitsize, reference_voltage)
             );
             """,
             """
@@ -98,16 +97,21 @@ class Database:
         return self._cursor.fetchall()
 
     def get_single_thermistor_record(self, part_number: str):
-        self._cursor.execute(
-            """
-            SELECT * FROM Thermistor
-            WHERE therm_id = %s;
-            """
-            ,
-            (part_number,)
-        )
-
-        return self._cursor.fetchone()
+        try:
+            self._cursor.execute(
+                """
+                SELECT * FROM Thermistor
+                WHERE part_number = %s;
+                """
+                ,
+                (part_number,)
+            )
+        except psycopg2.errors.UndefinedColumn as error:
+            if "does not exist" in str(error):
+                self._conn.rollback()
+                return None
+        else:
+            return self._cursor.fetchone()
 
     def add_config_record(
         self,
@@ -116,7 +120,6 @@ class Database:
         series_resistance_ohms: int,
         adc_bitsize: int,
         reference_voltage: float,
-        sample_period_s: float
     ):
         self._cursor.execute(
             """
@@ -125,11 +128,9 @@ class Database:
                 is_pull_down_therm,
                 series_resistance_Ω,
                 adc_bitsize,
-                reference_voltage,
-                sample_period_s
+                reference_voltage
             )
             VALUES (
-                %s,
                 %s,
                 %s,
                 %s,
@@ -144,7 +145,6 @@ class Database:
                 series_resistance_ohms,
                 adc_bitsize,
                 reference_voltage,
-                sample_period_s
             )
         )
 
@@ -160,16 +160,21 @@ class Database:
         return self._cursor.fetchall()
 
     def get_single_config_record(self, config_id: int):
-        self._cursor.execute(
-            """
-            SELECT * FROM Configuration
-            WHERE config_id = %s;
-            """
-            ,
-            (config_id,)
-        )
-
-        return self._cursor.fetchone()
+        try:
+            self._cursor.execute(
+                """
+                SELECT * FROM Configuration
+                WHERE config_id = %s;
+                """
+                ,
+                (config_id,)
+            )
+        except psycopg2.errors.UndefinedColumn as error:
+            if "does not exist" in str(error):
+                self._conn.rollback()
+                return None
+        else:
+            return self._cursor.fetchone()
 
     def add_setup_record(self, setup_id: int, part_number: str, config_id: int):
         self._cursor.execute(
@@ -204,17 +209,22 @@ class Database:
 
         return self._cursor.fetchall()
 
-    def get_single_setup_record(self, setup_id: int):    
-        self._cursor.execute(
-            """
-            SELECT * FROM Setup
-            WHERE setup_id = %s;
-            """
-            ,
-            (setup_id,)
-        )
-        
-        return self._cursor.fetchone()
+    def get_single_setup_record(self, setup_id: int):
+        try:
+            self._cursor.execute(
+                """
+                SELECT * FROM Setup
+                WHERE setup_id = %s;
+                """
+                ,
+                (setup_id,)
+            )
+        except psycopg2.errors.UndefinedColumn as error:
+            if "does not exist" in str(error):
+                self._conn.rollback()
+                return None
+        else:
+            return self._cursor.fetchone()
 
     def create_data_table(self):
         self._cursor.execute(
@@ -224,7 +234,8 @@ class Database:
                 date_stamp TIMESTAMPTZ,
                 duration INT,
                 degF_points REAL[],
-                config_id INT
+                setup_id INT NOT NULL,
+                FOREIGN KEY(setup_id) REFERENCES Setup (setup_id)
             );
             """
         )
@@ -281,16 +292,21 @@ class Database:
         return self._cursor.fetchall()
     
     def get_single_data_record(self, data_id: int) -> tuple[int, list[float]]:
-        self._cursor.execute(
-            """
-            SELECT * FROM Temperature
-            WHERE data_id = %s;
-            """
-            ,
-            (data_id,)
-        )
-
-        return self._cursor.fetchone()
+        try:
+            self._cursor.execute(
+                """
+                SELECT * FROM Temperature
+                WHERE data_id = %s;
+                """
+                ,
+                (data_id,)
+            )
+        except psycopg2.errors.UndefinedColumn as error:
+            if "does not exist" in str(error):
+                self._conn.rollback()
+                return None
+        else:
+            return self._cursor.fetchone()
 
     def disconnect(self):
         self._cursor.close()

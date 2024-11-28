@@ -33,12 +33,9 @@ if __name__ == "__main__":
     data_record = db.get_single_data_record(data_id)
 
     args = parser.parse_args()
-    setup = db.get_single_setup_record(data_record[4])
-    config_id = setup[2]
-    config = db.get_single_config_record(config_id)
     db.disconnect()
 
     if args.plot_log:
-        plot_temp_log_func(data=data_record[3], duration_s=data_record[2], sample_period_s=config[5])
+        plot_temp_log_func(data=data_record[3], duration_s=data_record[2])
     else:
-        plot_temps(data=data_record[3], sample_period_s=config[5])
+        plot_temps(data=data_record[3])
