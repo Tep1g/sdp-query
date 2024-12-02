@@ -18,9 +18,9 @@ if __name__ == "__main__":
             Data ID: {}
             Date Stamp: {}
             Duration (sec): {}
-            Average TempF: {}
-            Min TempF: {}
-            Max TempF: {}
+            Avg TempF: {:.2f}
+            Min TempF: {:.2f}
+            Max TempF: {:.2f}
             
             """.format(
                 record[0],
