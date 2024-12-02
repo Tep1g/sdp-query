@@ -33,7 +33,7 @@ def plot_temps(data: list[float], duration_s: int):
     temp = np.array(data)
 
     plt.plot(time, temp)
-    plt.xlabel('Time')
-    plt.ylabel('Temperature (degF)')
+    plt.xlabel('Time (seconds)', fontsize=16)
+    plt.ylabel('Temperature (degF)', fontsize=16)
     plt.grid(True)
     plt.show()
