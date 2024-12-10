@@ -21,8 +21,8 @@ def plot_temp_log_func(data: list[float], duration_s: int):
     temp = a*np.exp(-b*t) + amb_temp
 
     plt.plot(t, temp)
-    plt.xlabel('time')
-    plt.ylabel('temperature')
+    plt.xlabel('Time (seconds)', fontsize=16)
+    plt.ylabel('Temperature (degF)', fontsize=16)
     plt.title('Logarithmic Curve Fit Function')
     plt.grid(True)
     plt.show()
