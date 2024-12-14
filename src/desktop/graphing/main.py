@@ -11,7 +11,7 @@ if __name__ == "__main__":
     db = psql_db.Database()
     db.get_params()
     db.connect()
-    data_records = db.get_all_data_records()
+    data_records = db.get_all_data_descs()
     for record in data_records:
         print(
             """

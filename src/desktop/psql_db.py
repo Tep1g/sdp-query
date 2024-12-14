@@ -271,7 +271,7 @@ class Database:
 
         self._conn.commit()
 
-    def get_all_data_records(self):
+    def get_all_data_descs(self):
         self._cursor.execute(
             """
             SELECT 
