@@ -14,7 +14,7 @@ def _get_decay_params(data: list[float], sample_period_s) -> tuple[float, float,
     
     return a, b, amb_temp
 
-def plot_temp_log_func(data: list[float], duration_s: int):
+def plot_temp_exp_decay(data: list[float], duration_s: int):
     sample_period_s = duration_s / len(data)
     a, b, amb_temp = _get_decay_params(data, sample_period_s)
     function_string = "{:.2f}*exp(-{:.5f}*t) + {:.2f}".format(a, b, amb_temp)

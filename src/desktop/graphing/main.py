@@ -39,6 +39,6 @@ if __name__ == "__main__":
     db.disconnect()
 
     if args.curve_fit_exp_decay:
-        dg.plot_temp_log_func(data=data_record[3], duration_s=data_record[2])
+        dg.plot_temp_exp_decay(data=data_record[3], duration_s=data_record[2])
     else:
         dg.plot_temps(data=data_record[3], duration_s=data_record[2])
