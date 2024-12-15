@@ -7,7 +7,7 @@ import data_graphing as dg
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--plot_log', action='store_true')
+    parser.add_argument('--curve_fit_exp_decay', action='store_true')
     db = psql_db.Database()
     db.get_params()
     db.connect()
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     db.disconnect()
 
-    if args.plot_log:
+    if args.curve_fit_exp_decay:
         dg.plot_temp_log_func(data=data_record[3], duration_s=data_record[2])
     else:
         dg.plot_temps(data=data_record[3], duration_s=data_record[2])
