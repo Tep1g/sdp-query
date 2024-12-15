@@ -3,7 +3,7 @@ sys.path.append('..')
 
 import argparse
 import psql_db
-from data_graphing import plot_temp_log_func, plot_temps
+import data_graphing as dg
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -39,6 +39,6 @@ if __name__ == "__main__":
     db.disconnect()
 
     if args.plot_log:
-        plot_temp_log_func(data=data_record[3], duration_s=data_record[2])
+        dg.plot_temp_log_func(data=data_record[3], duration_s=data_record[2])
     else:
-        plot_temps(data=data_record[3], duration_s=data_record[2])
+        dg.plot_temps(data=data_record[3], duration_s=data_record[2])
